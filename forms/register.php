@@ -1,0 +1,1 @@
+../../slskirjasto/forms/register.php

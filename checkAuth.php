@@ -1,0 +1,1 @@
+../slskirjasto/checkAuth.php

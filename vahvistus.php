@@ -1,0 +1,1 @@
+../slskirjasto/vahvistus.php
