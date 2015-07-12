@@ -54,17 +54,39 @@ include_once("$basepath/html_base.html");
                     $("#talleta").attr("disabled", "true");
                     $("#lpelaaja").attr("disabled", "true");
                     $("#longelma").attr("disabled", "true");
-                }                                
+                }
+                $("#on_proto").val($("#proto").val());
             }
         
         $(function () {
               
             $("#sessio").find("input, textarea, select").each(function () {
-                console.log($(this).attr('id'));
                 $(this).blur(function () {
                     checkEm();
                 });
             });
+            
+            $("#proto").autocomplete( {
+                source : "<?php echo $baseurl;?>/json_proto.php",
+                minlength : 2,
+                select : function (event, ui) {
+                    checkEm();
+                }
+            })
+            
+            
+            $("#versio").autocomplete( {
+                source : "<?php echo $baseurl;?>/json_versio.php",
+                minlength : 2,
+                select : function (event, ui) {
+                    checkEm();
+                }
+            })
+            
+            $("#pe_tunnus").autocomplete( {
+                source : "<?php echo $baseurl;?>/json_tunniste.php",
+                minlength: 2
+            })
             tPelaajat = $("#pelaajat").DataTable ( {
                 "processing": true,
                 "serverSide": true,
@@ -78,8 +100,75 @@ include_once("$basepath/html_base.html");
                 <?php include("$basepath/datatables_language.js");?>
               
             });
-            tPelaajat.ajax.reload();
-            console.log(tPelaajat);    
+            
+            tOngelmat = $("#ongelmat").DataTable ( {
+                "processing": true,
+                "serverSide": true,
+                "responsive": true,
+                "orderMulti": true,
+                "search": {
+                "regex": true,
+                "caseInsensitive": true,
+                "smart" : true},
+                "ajax": "<?php echo $baseurl;?>/json_ongelmat.php",
+                <?php include("$basepath/datatables_language.js");?>
+              
+            })
+            
+            $("#pelaajat tbody").on('click','tr', function () {
+                var numero=$(this).children("td:first").html();
+                $.post("<?php echo $baseurl;?>/json_pelaaja.php", {"numero" : numero}, function (data) {
+                    if (data["virhe"]==true) {
+                        $("#palaute").removeClass("alert-success");
+                        $("#palaute").addClass("alert-danger");
+                        $("#palaute_t").html(data["virheet"]);
+                        $("#palaute").show();
+                        console.log(data);
+                        return;
+                    }
+                    
+                    $.each(data.data, function(index, value) {
+                        switch(index) {
+                            case "numero":
+                                index="jrnro"
+                                break;
+                            case "sessio":
+                                break;
+                            case "kelle":
+                                if (value.indexOf("perheille")!=-1) {
+                                    $("#pe_perheet").prop("checked", true);
+                                }
+                                if (value.indexOf("kasuaalit")!=-1) {
+                                    $("#pe_kasuaalit").prop("checked", true);
+                                    //code
+                                }
+                                if (value.indexOf("pelaajat")!=-1) {
+                                    $("#pe_pelaajat").prop("checked", true);
+                                    //code
+                                }
+                                if (value.indexOf("lapset")!=-1) {
+                                    $("#pe_lapset").prop("checked", true);
+                                    //code
+                                }
+                                if (value.indexOf("nuoret")!=-1) {
+                                    $("#pe_nuoret").prop("checked", true);
+                                    //code
+                                }
+                                if (value.indexOf("aikuisille")!=-1) {
+                                    $("#pe_aikuiset").prop("checked", true);
+                                    //code
+                                }
+                                break;
+                            default:
+                                var i="#pe_"+index;
+                                $(i).val(value);
+                        }
+                    })
+                    $("#pelaaja").modal("show");
+                    
+                })
+            })
+            // console.log(tPelaajat);    
         });
   
         function Talleta() {                    
@@ -95,6 +184,7 @@ include_once("$basepath/html_base.html");
                     $("#sessioid").val(data["data"]["sessioid"]);
                     console.log(data.data.sessioid);
                     checkEm();
+                    tOngelmat.ajax.reload();
                 } else {
                     $("#palaute").removeClass("alert-success");
                     $("#palaute").addClass("alert-danger");
@@ -109,28 +199,34 @@ include_once("$basepath/html_base.html");
         function nyt(kohde) {
             var nyt=new Date();
             var arvo=nyt.toISOString().substring(0,16);
-            
-            console.log(arvo);
+            function pad(number) {
+                if (number < 10) {
+                    return '0'+number;
+                    //code
+                }
+                return number;
+            }
+            arvo = nyt.getFullYear()+"-"+pad(nyt.getMonth()+1)+"-"+pad(nyt.getDate())+"T"+
+                pad(nyt.getHours())+":"+pad(nyt.getMinutes());
             kohde="#"+kohde;
-            console.log($(kohde).val());
             $(kohde).val(arvo);
         }
         
-        function talletaPelaaja() {
-            var pelaaja = document.getElementById("f_pelaaja");
+        function talletaOngelma() {
+            var ongelma = document.getElementById("ongelmaF");
             
-            if (pelaaja.checkValidity()==false) {
+            if (ongelma.checkValidity()==false) {
                 return;
             }
-            $('#pelaaja').modal('hide');
-            $.post("<?php echo $baseurl;?>/talletaPelaaja.php", $("#f_pelaaja").serialize(), function (data) {
+            $('#ongelma').modal('hide');
+            $.post("<?php echo $baseurl;?>/talletaOngelma.php", $("#ongelmaF").serialize(), function (data) {
                 if (data["virhe"]==false) {
-                    viesti="<?php echo _("Pelaaja talletettu: ");?>"+Date().toLocaleString();
+                    viesti="<?php echo _("Ongelma talletettu: ");?>"+Date().toLocaleString();
                     $("#palaute").removeClass("alert-danger");
                     $("#palaute").addClass("alert-success");
                     $("#palaute_t").html(viesti);
                     $("#palaute").show();
-                    tPelaajat.ajax.reload();
+                    tOngelmat.ajax.reload();
                 }
                 else {
                     $("#palaute").removeClass("alert-success");
@@ -140,10 +236,12 @@ include_once("$basepath/html_base.html");
                 }
                 console.log(data);
             }).fail(function (data) {
-                console.log("Pelaajan talletus mätti!");
+                console.log("Ongelman talletus mätti!");
                 console.log(data);
             });            
         }
+        
+        
     </script>
     </head>
     <body>
@@ -246,14 +344,21 @@ include_once("$basepath/html_base.html");
                         </tfoot>
                     </table>
                     <table id="ongelmat" name="ongelmat">
+                        <caption><?php echo _("Ongelmat");?></caption>      
                         <thead>
-                            <caption><?php echo _("Ongelmat");?></caption>
                             <tr>
                                 <th><?php echo _("Tunniste");?></th>
                                 <th><?php echo _("Kuvaus");?></th>
                                 <th><?php echo _("Laji");?></th>                                
                             </tr>
                         </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
                                 <th><?php echo _("Tunniste");?></th>
@@ -326,28 +431,28 @@ include_once("$basepath/html_base.html");
                                     <option>5</option>
                                 </datalist>
                                 <label for="pe_sosiaalisuus"><?php echo _("Sosiaalisuus");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_sosiaalisuus" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_sosiaalisuus" name="pe_sosiaalisuus" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_tuuri"><?php echo _("Tuuri");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_tuuri" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_tuuri" name="pe_tuuri" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_taktiikka"><?php echo _("Taktiikka");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_taktiikka" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_taktiikka" name="pe_taktiikka" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_fiilis"><?php echo _("Strategia");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_strategia" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_strategia" name="pe_strategia" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_fiilis"><?php echo _("Fiilis");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_fiilis" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_fiilis" name="pe_fiilis" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_uutuus"><?php echo _("Uutuus");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_uutuus" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_uutuus" name="pe_uutuus" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_mekaniikka"><?php echo _("Mekaniikka");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_mekaniikka" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_mekaniikka" name="pe_mekaniikka" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_idea"><?php echo _("Idea");?>
-                                    <input type="range" min="0" max="5" step="1" id="pe_idea" list="pe_sosiaalisuus" value="3"/>
+                                    <input type="range" min="0" max="5" step="1" id="pe_idea" name="pe_idea" list="pe_sosiaalisuus" value="3"/>
                                 </label>
                                 <label for="pe_kelle"><?php echo ("Kelle peli on tarkoitettu?");?></label>
                                 <div class="input-group">
@@ -368,7 +473,7 @@ include_once("$basepath/html_base.html");
                                         <?php echo _("Lapsille");?>
                                     </label>
                                         <label class="checkbox-inline">
-                                        <input type="checkbox" name="pe_perheet" id="pe_perheet" value="perheille" class="checkbox"/>
+                                        <input type="checkbox" name="pe_nuoret" id="pe_nuoret" value="nuoret" class="checkbox"/>
                                         <?php echo _("Nuorille");?>
                                     </label>
                                         <label class="checkbox-inline">
@@ -408,6 +513,8 @@ include_once("$basepath/html_base.html");
                             <form name="ongelmaF" id="ongelmaF" method="POST">
                                     <label for="on_id"><?php echo _("Tunniste");?></label>
                                     <input type="number" readonly name="on_id" id="on_id" class="form-control"/>
+                                    <label for="on_proto"><?php echo _("Proto");?></label>
+                                    <input type="text" readonly name="on_proto" id="on_proto" class="form-control"/>
                                     <label for="on_kuvaus">
                                         <?php echo _("Ongelman kuvaus:");?>
                                         <textarea class="textarea" name="on_kuvaus" id="on_kuvaus" rows="4" cols="60"></textarea>
@@ -417,11 +524,11 @@ include_once("$basepath/html_base.html");
                                     </label>
                                     <select id="on_laji" name="on_laji">
                                         <option value="kehitysidea"><?php echo _("Kehitysidea");?></option>
-                                        <option value="sääntovirhe"><?php echo _("Sääntövirhe");?></option>
+                                        <option value="sääntövirhe"><?php echo _("Sääntövirhe");?></option>
                                         <option value="komponenttivirhe"><?php echo _("Komponenttivirhe");?></option>
                                     </select>
-                                    <button type="button" class="btn" id="on_talleta" name="on_talleta" data-toggle="modal" data-target="ongelma"><?php echo _("Talleta");?></button>
-                                    <button type="button" class="btn" id="on_sulje" name="on_sulje" data-toggle="modal" data-target="ongelma"><?php echo _("Sulje");?></button>
+                                    <button type="button" class="btn" id="on_talleta" name="on_talleta" onclick="talletaOngelma()"><?php echo _("Talleta");?></button>
+                                    <button type="button" class="btn" id="on_sulje" name="on_sulje" onclick="$('#ongelma').modal('hide')"><?php echo _("Sulje");?></button>
                                 </form>
                         </div>
                     </div>

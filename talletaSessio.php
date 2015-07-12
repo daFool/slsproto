@@ -57,6 +57,7 @@ else {
             $result=array("virhe"=>true, "virheet"=>_("Session talletus epäonnistui."), "data"=>$_REQUEST);
         } else {
             $_SESSION["s_sessioid"]=$res;
+            $_SESSION["s_protoid"]=$d["proto"];
             $data=array("sessioid"=>$res);
             $result=array("virhe"=>false, "data"=>$data);
         }

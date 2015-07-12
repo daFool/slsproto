@@ -169,5 +169,29 @@ class PROTOT {
         }
     }
     
+    /**
+     * Autocompleten haku
+     * @param str $proto
+     * @param str $hakija
+     * @return boolean|array False jos ei löytynyt, array jos löytyi
+     * */
+    public function searchWithNamePart($proto, $hakija) {
+        try {
+            $proto.='%';
+            $s="select nimi from proto where nimi ilike :proto;";
+            $st = $this->db->prepare($s);
+            $res = $st->execute(array("proto"=>$proto));
+            if($res===false)
+                return false;
+            $rows = $st->fetchAll(PDO::FETCH_ASSOC);
+            if(!is_array($rows))
+                $rows = array($row);
+            return $rows;
+        }
+        catch (PDOException $e) {
+            die("Programming error: {$e->getMessage()}");
+        }
+    }
+    
 }
 ?>

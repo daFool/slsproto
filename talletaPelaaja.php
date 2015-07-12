@@ -22,11 +22,11 @@ if(!isset($_POST["pe_jrnro"]) || $_POST["pe_jrnro"]=="") {
 }
 if($result["virhe"]==false) {
     $f = array("pe_tunnus"=>"tunnus", "pe_sijoitus"=>"sijoitus", "pe_tulos"=>"tulos", "pe_nimi"=>"nimi",
-               "pe_aiemmin"=>"aiemmin", "pe_ostaisitko"=>"ostaisitko", "pe_pelaisitko"=>"pelaisitko", "pe_sosiaalisuus"=>"pe_sosiaalisuus",
+               "pe_aiemmin"=>"aiemmin", "pe_ostaisitko"=>"ostaisitko", "pe_uudestaan"=>"pelaisitko", "pe_sosiaalisuus"=>"sosiaalisuus",
                "pe_tuuri"=>"tuuri", "pe_taktiikka"=>"taktiikka", "pe_fiilis"=>"fiilis", "pe_uutuus"=>"uutuus", "pe_mekaniikka"=>"mekaniikka",
                "pe_idea"=>"idea", "pe_kelle"=>"kelle", "pe_assosiaatiot"=>"assosiaatiot", "pe_kokemus"=>"kokemus", "pe_aikuiset"=>"aikuiset",
                "pe_kasuaalit"=>"kasuaalit", "pe_lapset"=>"lapset", "pe_perheet"=>"perheet", "pe_pelaajat"=>"pelaajat",
-               "pe_nuoret"=>"nuoret");
+               "pe_nuoret"=>"nuoret", "pe_strategia"=>"strategia");
     $d=array();
     foreach($f as $k=>$v) {
         if(!isset($_POST[$k]))
@@ -34,11 +34,11 @@ if($result["virhe"]==false) {
         switch($k) {
             case "pe_aiemmin":
             case "pe_ostaisitko":
-            case "pe_pelaisitko":
+            case "pe_uudestaan":
                 if($_POST[$k]=="ei")
-                    $d[$v]=false;
+                    $d[$v]="false";
                 else
-                    $d[$v]=true;
+                    $d[$v]="true";
                 break;
             case "pe_perheet":
             case "pe_lapset":

@@ -150,5 +150,27 @@ class PELAAJA {
             die($pe->getMessage());
         }
     }
+    
+    /**
+     * Pelaajan tiedot
+     * @param int $sessio Session tunniste
+     * @param int $numero Pelaajan numero
+     * @return array|boolean False jos ei löytynyt, tiedot jos löytyi
+     * */
+    public function haePelaaja($sessio, $numero) {
+        try {
+            $s = "select * from pelaaja where sessio=:sessio and numero=:numero;";
+            $st = $this->db->prepare($s);
+            $d = array("sessio"=>$sessio, "numero"=>$numero);
+            $res = $st->execute($d);
+            if($res===false)
+                return false;
+            $row = $st->fetch(PDO::FETCH_ASSOC);
+            return $row;
+        }
+        catch(PDOException $e) {
+            die($e->getMessage());
+        }
+    }
 }
 ?>
