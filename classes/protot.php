@@ -2,13 +2,9 @@
 /**
  * Protot
  *
- * @package SLS-Proto-tracker
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
- *
- * @uses globals.php
- * @uses users.php
- * @uses common.php
  *
  * */
 
@@ -22,9 +18,10 @@ class PROTOT {
     private $db;
     /** @var object SLS Database **/
     private $dbc;
-    /** @var object Current game(s)
-     * */
-    private $games;
+  
+    /** @var array Jemma hakutuloksille **/
+    private $protot;
+    
     /**
      * Constructor
      * @param object $db Database-handle
@@ -39,7 +36,7 @@ class PROTOT {
      * Find prototype
      * @param string $Rex SQL ilike expression to search for
      * @param string $FIeld Name of the field to use for the search
-     * @return mixed|boolean False if not found and an array containing game data
+     * @return mixed|boolean False if not found and an array containing proto data
      * */
     public function findWithRex($Rex, $Field) {
         try {
@@ -54,8 +51,8 @@ class PROTOT {
             if(!$res || $st->rowCount()==0) {
                 return false;
             }
-            $this->games = $st->fetchAll();
-            return $this->games;
+            $this->protot = $st->fetchAll();
+            return $this->protot;
         }
         catch(PDOException $e) {
             die("Programming error: {$e->getMessage()}");
@@ -63,26 +60,36 @@ class PROTOT {
     }
     
     /**
-     * Paginate games with gusto
+     * Paginate protot with gusto
+     *
+     * Datatables:in tarvitsema protohaku. Käyttöoikeuksia varten lisätty parametri, joka kertoo
+     * kuka hakeva käyttäjä on. @todo Toteuta käyttöoikeudet!
+     * @param int $start Rivi jolta järjestyksessä aloitetaan
+     * @param int $length Montako riviä ladataan
+     * @param string $order Kenttä jonka mukaan sortataan
+     * @param string $search Etsitäänkö jotakin? Ts. filtteröidäänkö sisältöä tällä termillä
+     * @param string $kuka Hakijan käyttäjätunnus @todo Toteuta!
+     * @return mixed Palautetaan false, mikäli haku itsessään epäonnistuu ja array rivejä muodossa [rivinumero][solunnimi]=solun arvo
+     * @todo Pisteytys! Tämän haun pitäisi kohdistua 
      * */
-    public function tableFetch($start, $length, $order, $search) {
+    public function tableFetch($start, $length, $order, $search, $kuka) {
         try {
             $ds = false;
-            $tulos = array("lkm"=>0, "pelit"=>array(), "riveja"=>0, "filtered"=>0);
+            $tulos = array("lkm"=>0, "protot"=>array(), "riveja"=>0, "filtered"=>0);
             $so="";
             $v="";
-            if(isset($search["value"])) {
+            if(isset($search["value"]) && $search["value"]!="") {
                 $v = $search["value"];
-                $so = "where (nimi ~* :v or julkaisija ~* :v or suunnittelija ~* :v or bgglinkki ~* :v)";
+                $so = "where (nimi ~* :v or omistaja ~* :v or status ~* :v)";
                 $ds = true;
             }
-            if($order !== false) {
-                $s = "select * from peli $so order by $order limit :length offset :start;";
-                $d = array("length"=>$length, "start"=>$start);
-            } else {
-                $s = "select * from peli $so limit :length offset :start;";
-                $d = array("length"=>$length, "start"=>$start);
-            }
+            if($order !== false) 
+                $oclause="order by $order";
+            else
+                $oclause="";
+                
+            $s = "select id, nimi, omistaja, luotu, muokattu, status from proto $so $oclause limit :length offset :start";
+            $d = array("length"=>$length, "start"=>$start);
             if($ds) 
                 $d["v"]=$v;
             
@@ -93,8 +100,8 @@ class PROTOT {
             if(!$res || $st->rowCount()==0) {
                 return $tulos;
             }
-            $pelit = $st->fetchAll();
-            $s = "select count(*) as lkm from peli;";
+            $protot = $st->fetchAll();
+            $s = "select count(*) as lkm from proto;";
             $st = $this->db->prepare($s);
             $res = $st->execute();
             if(!$res || $st->rowCount()==0) {
@@ -102,11 +109,11 @@ class PROTOT {
             }
             $row = $st->fetch();
             $tulos["lkm"]=$row["lkm"];
-            $tulos["pelit"]=$pelit;
-            $tulos["riveja"]=count($pelit);
+            $tulos["protot"]=$protot;
+            $tulos["riveja"]=count($protot);
             $tulos["filtered"]=$row["lkm"];
             if($ds) {
-                $s = "select count(*) as lkm from peli $so;";
+                $s = "select count(*) as lkm from protot $so;";
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v));
                 if($res && $st->rowCount()>0) {

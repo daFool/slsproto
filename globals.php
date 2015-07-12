@@ -31,5 +31,7 @@ define("SESSION_NAME", "prototracker");
 define("SESSION_COOKIEPATH", "/");
 /** @var REDIRECT_URI string Googlen autentikaation urli */
 define("REDIRECT_URI", "$baseurl/google_login.php");
+
+define("URL_MUNGLER", false);
 ini_set('session.referer_check', "");
 ?>
