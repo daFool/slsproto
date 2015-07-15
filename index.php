@@ -36,7 +36,11 @@
                 <?php include("$basepath/datatables_language.js");?>
                 }
             );
-        
+            $("#protot tbody").on('click','tr', function () {
+                var id;
+                id=$(this).children("td:nth-child(1)").html();
+                window.location="<?php echo $baseurl;?>/proto_main.php?protoid="+id;
+            });
             // Sessiot-taulu
             $('#sessiot').dataTable( {
                 "processing" : true,
@@ -47,7 +51,7 @@
                     "regex" : true,
                     "casInsensitive" : true,
                     "smart" : true},
-                "ajax" : "<?php echo "$basepath/json_sessiot.php";?>",
+                "ajax" : "<?php echo "$baseurl/json_sessiot.php";?>",
                 <?php include("$basepath/datatables_language.js");?>
                 }
             );
@@ -88,20 +92,32 @@
                     <table id="sessiot" class="display" cellspacing="0" width="100%">
                         <thead>
                             <tr>
+                                <th><?php echo _("Id");?></th>    
                                 <th><?php echo _("Ajankohta");?></th>
                                 <th><?php echo _("Proto");?></th>
                                 <th><?php echo _("Vetäjä");?></th>
-                                <th><?php echo _("Pelaajia");?></th>
                                 <th><?php echo _("Kesto");?></th>
+                                <th><?php echo _("Pelaajia");?></th>
                             </tr>
                         </thead>
+                        <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
+                                <th><?php echo _("Id");?></th>    
                                 <th><?php echo _("Ajankohta");?></th>
                                 <th><?php echo _("Proto");?></th>
                                 <th><?php echo _("Vetäjä");?></th>
-                                <th><?php echo _("Pelaajia");?></th>
                                 <th><?php echo _("Kesto");?></th>
+                                <th><?php echo _("Pelaajia");?></th>
                             </tr>
                         </tfoot>
                         </table>

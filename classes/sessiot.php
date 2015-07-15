@@ -2,13 +2,9 @@
 /**
  * Sessiot
  *
- * @package SLS-Proto-tracker
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
- *
- * @uses globals.php
- * @uses users.php
- * @uses common.php
  *
  * */
 
@@ -96,5 +92,73 @@ class SESSIOT {
             die($e->getMessage());
         }
     }
+    
+    /**
+     * Pääsivun sessionouto
+     *
+     * Datatablesin tarvitsema sessiohaku. Käyttöoikeuksia varten lisätty parametri, joka
+     * kertoo kuka hakeva käyttäjä on. @todo Toteuta käyttöoikeudet!
+     * @param int $start Rivi, jolta nouto aloitetaan
+     * @param int $length Montako riviä ladataan
+     * @param string $order Kenttä, jonka mukaan sortataan.
+     * @param string $search Etsitäänkö jotakin? Datatablesin filtteri
+     * @param string $kuka Hakijan käyttäjätunnus
+     * @return mixed Palautetaan false, mikäli haku itsessään epäonnistuu ja array rivejä muodossa [rivinumero][solunimi]=solun arvo
+     * @todo Käyttöoikeudet!
+     * */
+    public function tableFetch($start, $length, $order, $search, $kuka) {
+        try {
+            $ds = false;
+            $tulos = array("lkm"=>0, "sessiot"=>array(), "riveja"=>0, "filtered"=>0);
+            $so="";
+            $v="";
+            if(isset($search["value"]) && $search["value"]!="") {
+                $v = $search["value"];
+                $so = "where (nimi ~* :v or luoja ~* :v or status ~* :v)";
+                $ds = true;
+            }
+            if($order !== false) 
+                $oclause="order by $order";
+            else
+                $oclause="";
+                
+            $s = "select * from sEtusivu $so $oclause limit :length offset :start";
+            $d = array("length"=>$length, "start"=>$start);
+            if($ds) 
+                $d["v"]=$v;
+            
+            $m = "$s ($v)";
+            $this->dbc->log($m, __FILE__, __CLASS__,__LINE__,"DEBUG");
+            $st = $this->db->prepare($s);
+            $res = $st->execute($d);
+            if(!$res || $st->rowCount()==0) {
+                return $tulos;
+            }
+            $sessiot = $st->fetchAll();
+            $s = "select count(*) as lkm from sEtusivu;";
+            $st = $this->db->prepare($s);
+            $res = $st->execute();
+            if(!$res || $st->rowCount()==0) {
+                return $tulos;
+            }
+            $row = $st->fetch();
+            $tulos["lkm"]=$row["lkm"];
+            $tulos["sessiot"]=$sessiot;
+            $tulos["riveja"]=count($sessiot);
+            $tulos["filtered"]=$row["lkm"];
+            if($ds) {
+                $s = "select count(*) as lkm from sEtusivu $so;";
+                $st = $this->db->prepare($s);
+                $res = $st->execute(array("v"=>$v));
+                if($res && $st->rowCount()>0) {
+                    $tulos["filtered"]=$st->fetch()["lkm"];
+                }
+            }
+            return $tulos; 
+        }
+        catch(PDOException $e) {
+            die($e->getMessage());
+        }
+    } 
 }
 ?>
