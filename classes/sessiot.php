@@ -159,6 +159,28 @@ class SESSIOT {
         catch(PDOException $e) {
             die($e->getMessage());
         }
-    } 
+    }
+    
+    /**
+     * Session lataaminen
+     * @param int $sessioid
+     * @param str $kuka
+     * @return mixed False, jos epäonnistui ja array jos onnistui
+     * @todo Käyttöoikeudet!
+     * */
+    public function lataaSessio($sessioid, $kuka) {
+        try {
+            $s = "select * from sessio where id=:sessioid;";
+            $st = $this->db->prepare($s);
+            $res = $st->execute(array("sessioid"=>$sessioid));
+            if($res===false)
+                return false;
+            $row = $st->fetch(PDO::FETCH_ASSOC);
+            return $row;
+        }
+        catch(PDOException $e) {
+            die($e->getMessage());
+        }
+    }
 }
 ?>

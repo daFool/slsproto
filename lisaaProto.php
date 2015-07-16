@@ -37,7 +37,7 @@ $kuvaus = tv("kuvaus", false, $ra);
 $luoja = $_SESSION["user"]["tunniste"];
 $ra["luoja"]=$luoja;
 $ra["omistaja_ktunnus"]=$ra["omistaja"];
-$sijainti = tv("sijainti", fasle, $ra);
+$sijainti = tv("sijainti", false, $ra);
 $db = new SLSDB();
 $users = new SLSUSERS($db);
 
@@ -64,6 +64,15 @@ if($onko===false && $metodi=="lisää") {
         header("Location: {$_SESSION["paluu"]}");
         die();
     }
-    die("$metodi ei vielä ole tuettu!");
+    $id=$protot->talletaProto($_SESSION["p_id"], $ra, $_SESSION["user"]["tunniste"]);
+    if($id===false) {
+        die(_("Talletus epäonnistui. TODO!"));
+    }
+    $_SESSION["p_virhe"]=_("Proto talletettu");
+    foreach($ra as $k=>$v) {
+            $_SESSION["p_".$k]=$v;        
+        }        
+    header("Location: {$_SESSION["paluu"]}");
+    die();    
 }
 ?>

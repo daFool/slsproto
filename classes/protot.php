@@ -289,5 +289,46 @@ class PROTOT {
             die("Programming error: {$e->getMessage()}");
         }
     }
+    
+    /**
+     * Proton tallettaminen
+     * @param int $id Proton tunniste
+     * @param array $d Proton loppudata
+     * @param string $kuka Kuka on tallettamassa
+     * @return mixed False, jos epäonnistui, id, jos onnistui
+     * @todo Käyttöoikeudet!
+     * */
+    public function talletaProto($id, $d, $kuka) {
+        try {
+            $dt = array("id"=>$id);
+            $s1 = "update proto set muokattu=now()";
+            $s2 = "where id=:id;";
+            foreach($d as $k=>$v) {
+                switch($k) {
+                    case "minp":
+                        $k="minimipelaajamaara";
+                        break;
+                    case "maxp":
+                        $k="maksimipelaajamaara";
+                        break;
+                }
+                if($k=="metodi" || $k=="versio")
+                    continue;
+                if($v=="")
+                    continue;
+                $s1.=", $k=:$k";
+                $dt[$k]=$v;
+            }
+            $s = $s1." ".$s2;
+            $st = $this->db->prepare($s);
+            $res = $st->execute($dt);
+            if($res===false)
+                return false;
+            return $id;
+        }
+        catch(PDOExeception $e) {
+            die($e->getMessage());
+        }
+    }
 }
 ?>

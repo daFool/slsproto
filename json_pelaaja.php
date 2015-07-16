@@ -2,7 +2,7 @@
 /**
  * Javascript-palvelu pelaajien listaamiseen
  * 
- * @package SLS-Proto
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
  * @uses globals.php

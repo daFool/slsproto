@@ -6,9 +6,9 @@
  * @uses globals.php
  * @uses common.php
  * @uses uses.php
- * @uses minrights.php
+ * @uses maxrights.php
  * 
- * @package SLS-Proto-tracker
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
  *
@@ -16,11 +16,15 @@
 require_once("../globals.php");
 require_once("$basepath/helpers/common.php");
 require_once("$basepath/helpers/users.php");
-require_once("$basepath/helpers/minrights.php");
+require_once("$basepath/helpers/maxrights.php");
 
 if(!isset($_SESSION["p_metodi"]) || $_SESSION["p_metodi"]=="") {
     $metodi="lisää";
     $status_allowed=true;
+}
+else {
+    $metodi="muuta";
+    $status_allowed=false;
 }
 
 function def($nimi, $v) {
@@ -71,7 +75,7 @@ include_once("$basepath/html_base.html");
             })
 
             <?php
-            if(isset($_SESSION["p_virhe"])) {
+            if(isset($_SESSION["p_virhe"]) && $_SESSION["p_virhe"]!="") {
                 ?>
                 $("#warning").html("<?php echo $_SESSION["p_virhe"];?>");
                 $("#varoitus").show();

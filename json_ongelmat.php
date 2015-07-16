@@ -2,12 +2,14 @@
 /**
  * Javascript-palvelu ongelmien listaamiseen
  * 
- * @package SLS-Proto
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
  * @uses globals.php
  * @uses database.php
  * @uses games.php
+ * @uses ongelma.php
+ * @uses minrights.php
  * */
 
 require_once("globals.php");

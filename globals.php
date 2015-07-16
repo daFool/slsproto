@@ -9,11 +9,12 @@
  * */
 
 ini_set("variables_order","EGPCS");
+$basepath=__DIR__;
+require_once("$basepath/private.php");
+
 $development=true;
 
 if($development==true) {
-    $dbuser='mos';
-    $dbpassword='foobar';
     $dbport="5432";
     $dbhost="10.1.0.110";
     $baseurl="http://localhost/~mos/proto";
@@ -21,7 +22,6 @@ if($development==true) {
 
 $dbname="proto";
 $dsn="pgsql:host=$dbhost;port=$dbport;dbname=$dbname";
-$basepath=__DIR__;
 
 /** @var SESSION_TIMEOUT int Istunnon kesto sekunneissa */
 define("SESSION_TIMEOUT", 6*60*60);
@@ -34,4 +34,10 @@ define("REDIRECT_URI", "$baseurl/google_login.php");
 
 define("URL_MUNGLER", false);
 ini_set('session.referer_check', "");
+
+$email_from="Lautapelikirjasto <mos@iki.fi>";
+$email_host="error.claymountain.com";
+
+$google_appname="SLS Proto";
+
 ?>

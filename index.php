@@ -55,6 +55,11 @@
                 <?php include("$basepath/datatables_language.js");?>
                 }
             );
+            $("#sessiot tbody").on('click','tr',function() {
+                var id;
+                id=$(this).children("td:nth-child(1)").html();
+                window.location="<?php echo $baseurl;?>/lataaSessio.php?sessioid="+id;
+            });
         });                
     </script>
     </head>

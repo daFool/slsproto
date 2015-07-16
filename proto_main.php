@@ -19,6 +19,7 @@ if($protoid == false) {
     die();
 }
 $_SESSION["protoid"]=$protoid;
+$_SESSION["p_virhe"]="";
 
 $proto = new PROTOT($db);
 $tiedot = $proto->haeProto($protoid);
@@ -27,6 +28,7 @@ if($tiedot===false) {
     header("Location: $baseurl/index.php");
     die();
 }
+$_SESSION["p_metodi"]="muuta";
 
 require_once("$basepath/html_base.html");
 ?>
@@ -53,6 +55,10 @@ require_once("$basepath/html_base.html");
                 console.log($(this).children("td:nth-child(1)").html());
                 console.log($(this).children("td:nth-child(2)").html());
             });
+            
+            $("#muokkaa").on('click',function() {
+                window.location="<?php echo $baseurl;?>/forms/proto.php";
+            })
         });        
     </script>
     </head>
@@ -94,7 +100,7 @@ require_once("$basepath/html_base.html");
                             
                         </tbody>
                     </table>
-                    <button type="button" class="btn" value="muuta"><?php echo _("Muuokkaa");?></button>
+                    <button type="button" class="btn" id="muokkaa" value="muuta"><?php echo _("Muuokkaa");?></button>
                     <table id="scores">
                         <caption><?php echo _("Pelaajien arviot");?></caption>
                         <thead>

@@ -6,7 +6,7 @@
  * @uses globals.php
  * @uses common.php
  * @uses uses.php
- * @uses minrights.php
+ * @uses maxrights.php
  * 
  * @package SLS-Proto-tracker
  * @license http://opensource.org/licenses/GPL-2.0
@@ -16,7 +16,7 @@
 require_once("../globals.php");
 require_once("$basepath/helpers/common.php");
 require_once("$basepath/helpers/users.php");
-require_once("$basepath/helpers/minrights.php");
+require_once("$basepath/helpers/maxrights.php");
 
 if(!isset($_SESSION["s_metodi"]) || $_SESSION["s_metodi"]=="") {
     $metodi="lisää";

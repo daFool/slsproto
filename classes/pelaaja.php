@@ -2,13 +2,9 @@
 /**
  * Pelaajat
  *
- * @package SLS-Proto-tracker
+ * @package SLS-Prototracker
  * @license http://opensource.org/licenses/GPL-2.0
  * @author Mauri "mos" Sahlberg
- *
- * @uses globals.php
- * @uses users.php
- * @uses common.php
  *
  * */
 
