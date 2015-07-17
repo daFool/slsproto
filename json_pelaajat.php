@@ -35,7 +35,7 @@ if(!isset($_SESSION["s_sessioid"])) {
 
 $sessioid=$_SESSION["s_sessioid"];
 
-$a = ["numero", "nimi"];
+$a = array("numero", "nimi");
 $p = new PELAAJA($db);
 $od=false;
 if($order) {

@@ -26,7 +26,7 @@ $order = isset($_REQUEST["order"]) ? $_REQUEST["order"] : false;
 $columns = isset($_REQUEST["columns"]) ? $_REQUEST["columns"] : false;
 $protoid=isset($_SESSION["protoid"]) ? $_SESSION["protoid"] : false;
 
-$a = ["sessio", "numero", "score", "fiilis", "mekaniikka", "idea", "uutuus", "sosiaalisuus", "tuuri", "taktiikka", "strategia"];
+$a = array("sessio", "numero", "score", "fiilis", "mekaniikka", "idea", "uutuus", "sosiaalisuus", "tuuri", "taktiikka", "strategia");
 $p = new PROTOT($db);
 $od=false;
 if($order) {
