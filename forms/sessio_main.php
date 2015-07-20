@@ -241,6 +241,34 @@ include_once("$basepath/html_base.html");
             });            
         }
         
+         function talletaPelaaja() {
+            var pelaaja = document.getElementById("f_pelaaja");
+            
+            if (pelaaja.checkValidity()==false) {
+                return;
+            }
+            $('#pelaaja').modal('hide');
+            $.post("<?php echo $baseurl;?>/talletaPelaaja.php", $("#f_pelaaja").serialize(), function (data) {
+                if (data["virhe"]==false) {
+                    viesti="<?php echo _("Pelaaja talletettu: ");?>"+Date().toLocaleString();
+                    $("#palaute").removeClass("alert-danger");
+                    $("#palaute").addClass("alert-success");
+                    $("#palaute_t").html(viesti);
+                    $("#palaute").show();
+                    tOngelmat.ajax.reload();
+                }
+                else {
+                    $("#palaute").removeClass("alert-success");
+                    $("#palaute").addClass("alert-danger");
+                    $("#palaute_t").html(data["virheet"]);
+                    $("#palaute").show();
+                }
+                console.log(data);
+            }).fail(function (data) {
+                console.log("Pelaajan talletus mätti!");
+                console.log(data);
+            });            
+        }
         
     </script>
     </head>
