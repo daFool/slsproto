@@ -38,7 +38,7 @@ if(!isset($_SESSION["s_sessioid"]) || !isset($_SESSION["s_protoid"])) {
 $sessioid=$_SESSION["s_sessioid"];
 $protoid=$_SESSION["s_protoid"];
 
-$a = ["id", "kuvaus", "laji"];
+$a = array("id", "kuvaus", "laji");
 $ongelma = new ONGELMA($db);
 $od=false;
 if($order) {

@@ -117,7 +117,8 @@ class PROTOT {
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v));
                 if($res && $st->rowCount()>0) {
-                    $tulos["filtered"]=$st->fetch()["lkm"];
+		    $row=$st->fetch(PDO::FETCH_ASSOC);
+                    $tulos["filtered"]=$row["lkm"];
                 }
             }
             return $tulos;
@@ -280,7 +281,8 @@ class PROTOT {
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v));
                 if($res && $st->rowCount()>0) {
-                    $tulos["filtered"]=$st->fetch()["lkm"];
+		    $row=$st->fetch(PDO::FETCH_ASSOC);
+                    $tulos["filtered"]=$row["lkm"];
                 }
             }
             return $tulos;

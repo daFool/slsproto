@@ -54,7 +54,7 @@ else {
         else
             $res=$sessio->saveSession($sessioid, $d);
         if($res===false) {
-            $result=array("virhe"=>true, "virheet"=>_("Session talletus epäonnistui."), "data"=>$_REQUEST);
+            $result=array("virhe"=>true, "virheet"=>_("Session talletus epäonnistui. $metodi"), "data"=>$_REQUEST);
         } else {
             $_SESSION["s_sessioid"]=$res;
             $_SESSION["s_protoid"]=$d["proto"];

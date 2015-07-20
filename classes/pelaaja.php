@@ -137,8 +137,10 @@ class PELAAJA {
                 $s = "select count(*) as lkm from pelaaja where sessio=:sessio $so;";
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v, "sessio"=>$sessio));
-                if($res && $st->rowCount()>0)
-                    $tulos["filtered"]=$st->fetch()["lkm"];
+                if($res && $st->rowCount()>0) {
+		    $row=$st->fetch(PDO::FETCH_ASSOC);
+                    $tulos["filtered"]=$row["lkm"];
+		}
             }
             return $tulos;
         }
