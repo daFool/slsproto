@@ -34,9 +34,6 @@ if($res===false) {
 $protot = new PROTOT($db);
 $proto = $protot->haeProto($res['proto']);
 
-print_r($proto);
-print_r($res);
-die;
 foreach($res as $k=>$v) {
     switch($k) {
         case 'proto':
@@ -51,8 +48,8 @@ foreach($res as $k=>$v) {
         case 'peli_loppui':
         case 'lopputoimet_alkoivat':
         case 'lopputoimet_loppuivat':
-            list($p, $t)=explode(' ',$v);
-            $_SESSION["s_".$k]=$p."T".$t;
+            @list($p, $t)=explode(' ',$v);
+            $_SESSION["s_".$k]=$p."T".substr($t,0,5);
             break;
         default:
             $_SESSION["s_".$k]=$v;

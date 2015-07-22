@@ -17,6 +17,7 @@
  require_once("globals.php");
  require_once("$basepath/helpers/common.php");
  require_once("$basepath/helpers/users.php");
+ require_once("$basepath/cleanDefaults.php");
  include_once("$basepath/html_base.html");
 ?>
     <title><?php echo _("Prototracker");?></title>

@@ -16,11 +16,11 @@ $development=true;
 
 if($development==true) {
     $dbport="5432";
-    $dbhost="127.0.0.1";
-    $baseurl="http://slsproto.tuolla.com";
+    $dbhost="10.1.0.110";
+    $baseurl="http://localhost/~mos/proto";
 }
 
-$dbname="slsproto";
+$dbname="proto";
 $dsn="pgsql:host=$dbhost;port=$dbport;dbname=$dbname";
 
 /** @var SESSION_TIMEOUT int Istunnon kesto sekunneissa */
