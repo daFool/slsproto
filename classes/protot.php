@@ -40,7 +40,7 @@ class PROTOT {
      * */
     public function findWithRex($Rex, $Field) {
         try {
-            $fields = array("nimi", "omistaja", "suunnittelijat", "luoja", "omistaja_ktunnus");
+            $fields = array("nimi", "omistaja", "suunnittelijat", "luoja", "omistaja_ktunnus", "id");
             if(array_search($Field, $fields)===false) {
                 return false;
             }
