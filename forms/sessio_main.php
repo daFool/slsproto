@@ -331,7 +331,7 @@ include_once("$basepath/html_base.html");
                             <input id="vkesto" name="vuoron_kesto" type="number" min=0 max=480 step=5 value="<?php def("vuoron_kesto",0);?>" class="form-control"/>
                         </label>
                         <label for="kkesto"><?php echo _("Kierroksen (1 vuoro/pelaaja) kesto minuuteissa: ");?>
-                            <input id="kkesto" name="kierroksen_kesto" type="number" min=0 max=480 step=5 value="<?php def("kierroksen_kesto",0);?>" class="form-control"/>
+                            <input id="kkesto" name="kierroksen_kesto" type="number" min=0 max=480 step=1 value="<?php def("kierroksen_kesto",0);?>" class="form-control"/>
                         </label>
                         <label for="kierroksia"><?php echo _("Kierroksia (1 vuoro/pelaaja): ");?>
                             <input id="kierroksia" name="kierroksia" type="number" min=0 max=480 step=1 value="<?php def("kierroksia",0);?>" class="form-control"/>
