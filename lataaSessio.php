@@ -14,7 +14,7 @@ require_once("globals.php");
 require_once("$basepath/helpers/common.php");
 require_once("$basepath/helpers/database.php");
 require_once("$basepath/classes/sessiot.php");
-require_once('$basepath/classes/proto.php');
+require_once("$basepath/classes/protot.php");
 
 
 require_once("$basepath/helpers/minrights.php");
@@ -33,6 +33,10 @@ if($res===false) {
 }
 $protot = new PROTOT($db);
 $proto = $protot->haeProto($res['proto']);
+
+print_r($proto);
+print_r($res);
+die;
 foreach($res as $k=>$v) {
     switch($k) {
         case 'proto':
