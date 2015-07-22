@@ -1,7 +1,7 @@
 -- ======================================================================
 -- ===   Sql Script for Database : PostgreSQL db
 -- ===
--- === Build : 13
+-- === Build : 15
 -- ======================================================================
 
 DROP TABLE logi;
@@ -176,6 +176,7 @@ CREATE TABLE Sessio
     pelaajia               timestamptz,
     luoja                  varchar(255),
     saannotluettu          varchar(29),
+    versio                 varchar(255),
 
     primary key(id),
 
@@ -229,6 +230,7 @@ CREATE TABLE Pelaaja
     tulos         varchar(255),
     kokemus       int2,
     nimi          varchar(255),
+    aiemmin       bool,
 
     foreign key(sessio) references Sessio(id) on update CASCADE on delete CASCADE,
     foreign key(tunnus) references kayttaja(tunniste) on update CASCADE on delete CASCADE
