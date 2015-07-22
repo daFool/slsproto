@@ -14,6 +14,8 @@ require_once("globals.php");
 require_once("$basepath/helpers/common.php");
 require_once("$basepath/helpers/database.php");
 require_once("$basepath/classes/sessiot.php");
+require_once('$basepath/classes/proto.php');
+
 
 require_once("$basepath/helpers/minrights.php");
 
