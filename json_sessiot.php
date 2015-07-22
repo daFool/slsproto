@@ -25,7 +25,7 @@ $search = isset($_REQUEST["search"]) ? $_REQUEST["search"] : false;
 $order = isset($_REQUEST["order"]) ? $_REQUEST["order"] : false;
 $columns = isset($_REQUEST["columns"]) ? $_REQUEST["columns"] : false;
 
-$a = ["id", "ajankohta", "nimi", "luoja", "kesto", "pelaajia"];
+$a = array("id", "ajankohta", "nimi", "luoja", "kesto", "pelaajia");
 $p = new SESSIOT($db);
 $od=false;
 if($order) {

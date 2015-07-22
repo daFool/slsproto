@@ -25,7 +25,7 @@ $search = isset($_REQUEST["search"]) ? $_REQUEST["search"] : false;
 $order = isset($_REQUEST["order"]) ? $_REQUEST["order"] : false;
 $columns = isset($_REQUEST["columns"]) ? $_REQUEST["columns"] : false;
 
-$a = ["id", "nimi", "omistaja", "luotu", "muokattu", "status" ];
+$a = array("id", "nimi", "omistaja", "luotu", "muokattu", "status" );
 $p = new PROTOT($db);
 $od=false;
 if($order) {

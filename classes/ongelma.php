@@ -139,7 +139,8 @@ class ONGELMA {
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v, "proto"=>$proto));
                 if($res && $st->rowCount()>0)
-                    $tulos["filtered"]=$st->fetch()["lkm"];
+		    $row=$st->fetch(PDO::FETCH_ASSOC);
+                    $tulos["filtered"]=$row["lkm"];
             }
             return $tulos;
         }

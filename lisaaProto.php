@@ -65,14 +65,15 @@ if($onko===false && $metodi=="lisää") {
         die();
     }
     $id=$protot->talletaProto($_SESSION["p_id"], $ra, $_SESSION["user"]["tunniste"]);
-    if($id===false) {
-        die(_("Talletus epäonnistui. TODO!"));
-    }
-    $_SESSION["p_virhe"]=_("Proto talletettu");
-    foreach($ra as $k=>$v) {
-            $_SESSION["p_".$k]=$v;        
-        }        
-    header("Location: {$_SESSION["paluu"]}");
-    die();    
 }
+if($id===false) {
+    die(_("Talletus epäonnistui. TODO!"));
+}
+$_SESSION["p_virhe"]=_("Proto talletettu");
+foreach($ra as $k=>$v) {
+        $_SESSION["p_".$k]=$v;        
+    }        
+header("Location: {$_SESSION["paluu"]}");
+die();    
+
 ?>
