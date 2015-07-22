@@ -43,7 +43,7 @@ else {
     $sessio = new SESSIOT($db);
     $protot = new PROTOT($db);
     
-    $poro = $protot->haeProto($d["proto"]);
+    $poro = $protot->findWithRex($d["proto"], "nimi");
     if($poro === false) {
         $result=array("virhe"=>true, "virheet"=>sprintf(_("Protoa %s ei löytynyt"),$d['proto']), "data"=>$_REQUEST);
     }

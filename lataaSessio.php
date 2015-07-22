@@ -29,9 +29,28 @@ if($res===false) {
     header("Location: $baseurl/index.php");
     die();
 }
+$protot = new PROTOT($db);
+$proto = $protot->haeProto($res['proto']);
 foreach($res as $k=>$v) {
-    $_SESSION["s_".$k]=$v;
-    
+    switch($k) {
+        case 'proto':
+            $_SESSION["s_".$k]=$proto["nimi"];
+            break;
+        case 'ajankohta':
+        case 'saantoselitys_alkoi':
+        case 'saantoselitys_loppui':
+        case 'setup_alkoi':
+        case 'setup_loppui':
+        case 'peli_alkoi':
+        case 'peli_loppui':
+        case 'lopputoimet_alkoivat':
+        case 'lopputoimet_loppuivat':
+            list($p, $t)=explode(' ',$v);
+            $_SESSION["s_".$k]=$p."T".$t;
+            break;
+        default:
+            $_SESSION["s_".$k]=$v;
+    }    
 }
 $_SESSION["s_sessioid"]=$sessioid;
 $_SESSION["s_metodi"]="muuta";
