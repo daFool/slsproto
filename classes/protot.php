@@ -265,7 +265,7 @@ class PROTOT {
                 return $tulos;
             }
             $protot = $st->fetchAll();
-            $s = "select count(*) as lkm from proto;";
+            $s = "select count(*) as lkm from vProtoValues;";
             $st = $this->db->prepare($s);
             $res = $st->execute();
             if(!$res || $st->rowCount()==0) {
@@ -277,7 +277,7 @@ class PROTOT {
             $tulos["riveja"]=count($protot);
             $tulos["filtered"]=$row["lkm"];
             if($ds) {
-                $s = "select count(*) as lkm from protot $so;";
+                $s = "select count(*) as lkm from vProtoValues $so;";
                 $st = $this->db->prepare($s);
                 $res = $st->execute(array("v"=>$v));
                 if($res && $st->rowCount()>0) {
@@ -330,6 +330,76 @@ class PROTOT {
         }
         catch(PDOExeception $e) {
             die($e->getMessage());
+        }
+    }
+    
+        /**
+     * Proton arvostelut
+     *
+     * Datatables:in tarvitsema protohaku. Käyttöoikeuksia varten lisätty parametri, joka kertoo
+     * kuka hakeva käyttäjä on. @todo Toteuta käyttöoikeudet!
+     * @param int $start Rivi jolta järjestyksessä aloitetaan
+     * @param int $length Montako riviä ladataan
+     * @param string $order Kenttä jonka mukaan sortataan
+     * @param string $search Etsitäänkö jotakin? Ts. filtteröidäänkö sisältöä tällä termillä
+     * @param string $kuka Hakijan käyttäjätunnus @todo Toteuta!
+     * @param string $id Mistä protosta on kyse
+     * @return mixed Palautetaan false, mikäli haku itsessään epäonnistuu ja array rivejä muodossa [rivinumero][solunnimi]=solun arvo
+     * @todo Pisteytys! Tämän haun pitäisi kohdistua 
+     * */
+    public function etusivuTableFetch($start, $length, $order, $search, $kuka) {
+        try {
+            $ds = false;
+            $tulos = array("lkm"=>0, "protot"=>array(), "riveja"=>0, "filtered"=>0);
+            $v="";
+            $so="";
+            if(isset($search["value"]) && $search["value"]!="") {
+                $v = $search["value"];
+                $so = "where suunnittelijat ~* :v or nimi ~* :v";
+                $ds = true;
+            }
+            if($order !== false) 
+                $oclause="order by $order";
+            else
+                $oclause="";
+                
+            $s = "select id, nimi, suunnittelijat, score, luotu from vProtoWithValues $so $oclause limit :length offset :start";
+            $d = array("length"=>$length, "start"=>$start);
+            if($ds) 
+                $d["v"]=$v;
+            
+            $m = "$s ($v)";
+            $this->dbc->log($m, __FILE__, __CLASS__,__LINE__,"DEBUG");
+            $st = $this->db->prepare($s);
+            $res = $st->execute($d);
+            if(!$res || $st->rowCount()==0) {
+                return $tulos;
+            }
+            $protot = $st->fetchAll();
+            $s = "select count(*) as lkm from vProtoWithValues;";
+            $st = $this->db->prepare($s);
+            $res = $st->execute();
+            if(!$res || $st->rowCount()==0) {
+                return $tulos;
+            }
+            $row = $st->fetch();
+            $tulos["lkm"]=$row["lkm"];
+            $tulos["protot"]=$protot;
+            $tulos["riveja"]=count($protot);
+            $tulos["filtered"]=$row["lkm"];
+            if($ds) {
+                $s = "select count(*) as lkm from vProtoWithValues $so;";
+                $st = $this->db->prepare($s);
+                $res = $st->execute(array("v"=>$v));
+                if($res && $st->rowCount()>0) {
+		    $row=$st->fetch(PDO::FETCH_ASSOC);
+                    $tulos["filtered"]=$row["lkm"];
+                }
+            }
+            return $tulos;
+        }
+        catch(PDOException $e) {
+            die("Programming error: {$e->getMessage()}");
         }
     }
 }

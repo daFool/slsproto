@@ -33,7 +33,7 @@
                     "regex" : true,
                     "casInsensitive" : true,
                     "smart" : true},
-                "ajax" : "<?php echo "$baseurl/json_protot.php";?>",
+                "ajax" : "<?php echo "$baseurl/json_prototEtusivu.php";?>",
                 <?php include("$basepath/datatables_language.js");?>
                 }
             );
@@ -75,20 +75,18 @@
                             <tr>
                                 <th><?php echo _("Id");?></th>
                                 <th><?php echo _("Nimi");?></th>
-                                <th><?php echo _("Omistaja");?></th>
-                                <th><?php echo _("Lisätty");?></th>
-                                <th><?php echo _("Muokattu");?></th>
-                                <th><?php echo _("Tila");?></th>
+                                <th><?php echo _("Suunnittelijat");?></th>
+                                <th><?php echo _("Pisteet");?></th>
+                                <th><?php echo _("Luotu");?></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th><?php echo _("Id");?></th>
                                 <th><?php echo _("Nimi");?></th>
-                                <th><?php echo _("Omistaja");?></th>
-                                <th><?php echo _("Lisätty");?></th>
-                                <th><?php echo _("Muokattu");?></th>
-                                <th><?php echo _("Tila");?></th>
+                                <th><?php echo _("Suunnittelijat");?></th>
+                                <th><?php echo _("Pisteet");?></th>
+                                <th><?php echo _("Luotu");?></th>
                             </tr>
                         </tfoot>                      
                     </table>
