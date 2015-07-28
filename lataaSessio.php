@@ -51,6 +51,9 @@ foreach($res as $k=>$v) {
             @list($p, $t)=explode(' ',$v);
             $_SESSION["s_".$k]=$p."T".substr($t,0,5);
             break;
+        case 'id':
+            $_SESSION["s_protoid"]=$v;
+            break;
         default:
             $_SESSION["s_".$k]=$v;
     }    

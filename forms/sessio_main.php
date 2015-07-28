@@ -39,24 +39,24 @@ include_once("$basepath/html_base.html");
 
     <title><?php echo _("Session lisääminen");?></title>
     <script type="text/javascript">
-            function checkEm() {
-                var lSessio = document.getElementById("sessio");
-                var tunniste = $("#sessioid").val();
+        function checkEm() {
+            var lSessio = document.getElementById("sessio");
+            var tunniste = $("#sessioid").val();
                 
-                if (lSessio.checkValidity()==true) {
-                    $("#talleta").removeAttr("disabled");
-                    if (typeof tunniste != "undefined" && tunniste) {
-                        $("#lpelaaja").removeAttr("disabled");
-                        $("#longelma").removeAttr("disabled");
-                    }
+            if (lSessio.checkValidity()==true) {
+                $("#talleta").removeAttr("disabled");
+                if (typeof tunniste != "undefined" && tunniste) {
+                    $("#lpelaaja").removeAttr("disabled");
+                    $("#longelma").removeAttr("disabled");
                 }
-                else {
-                    $("#talleta").attr("disabled", "true");
-                    $("#lpelaaja").attr("disabled", "true");
-                    $("#longelma").attr("disabled", "true");
-                }
-                $("#on_proto").val($("#proto").val());
             }
+            else {
+                $("#talleta").attr("disabled", "true");
+                $("#lpelaaja").attr("disabled", "true");
+                $("#longelma").attr("disabled", "true");
+            }
+            $("#on_proto").val($("#proto").val());
+        }
         
         $(function () {
               
@@ -72,7 +72,7 @@ include_once("$basepath/html_base.html");
                 select : function (event, ui) {
                     checkEm();
                 }
-            })
+            });
             
             
             $("#versio").autocomplete( {
@@ -81,24 +81,25 @@ include_once("$basepath/html_base.html");
                 select : function (event, ui) {
                     checkEm();
                 }
-            })
+            });
             
             $("#pe_tunnus").autocomplete( {
                 source : "<?php echo $baseurl;?>/json_tunniste.php",
                 minlength: 2
-            })
+            });
+            
             tPelaajat = $("#pelaajat").DataTable ( {
                 "processing": true,
                 "serverSide": true,
                 "responsive": true,
                 "orderMulti": true,
                 "search": {
-                "regex": true,
-                "caseInsensitive": true,
-                "smart" : true},
+                    "regex": true,
+                    "caseInsensitive": true,
+                    "smart" : true
+                },
                 "ajax": "<?php echo $baseurl;?>/json_pelaajat.php",
-                <?php include("$basepath/datatables_language.js");?>
-              
+                <?php include("$basepath/datatables_language.js");?>              
             });
             
             tOngelmat = $("#ongelmat").DataTable ( {
@@ -107,13 +108,13 @@ include_once("$basepath/html_base.html");
                 "responsive": true,
                 "orderMulti": true,
                 "search": {
-                "regex": true,
-                "caseInsensitive": true,
-                "smart" : true},
+                    "regex": true,
+                    "caseInsensitive": true,
+                    "smart" : true
+                },
                 "ajax": "<?php echo $baseurl;?>/json_ongelmat.php",
                 <?php include("$basepath/datatables_language.js");?>
-              
-            })
+            });
             
             $("#pelaajat tbody").on('click','tr', function () {
                 var numero=$(this).children("td:first").html();
