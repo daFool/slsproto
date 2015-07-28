@@ -252,7 +252,7 @@ class PROTOT {
                 $oclause="";
                 
             $s = "select sessio, numero, sosiaalisuus, tuuri, taktiikka, strategia, fiilis
-            , uutuus, mekaniikka, idea, score from vProtoValues $so $oclause limit :length offset :start";
+            , uutuus, mekaniikka, idea, score, ostaisitko, pelaisitko from vProtoValues $so $oclause limit :length offset :start";
             $d = array("length"=>$length, "start"=>$start, "id"=>$id);
             if($ds) 
                 $d["v"]=$v;

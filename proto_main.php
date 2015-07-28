@@ -115,7 +115,9 @@ require_once("$basepath/html_base.html");
                                 <th><?php echo _("Sosiaalisuus");?></th>
                                 <th><?php echo _("Tuuri");?></th>
                                 <th><?php echo _("Taktiikka");?></th>
-                                <th><?php echo _("Strategia");?></th>                                
+                                <th><?php echo _("Strategia");?></th>
+                                <th><?php echo _("Ostaistiko");?></th>
+                                <th><?php echo _("Pelaisitko");?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,6 +147,8 @@ require_once("$basepath/html_base.html");
                                 <th><?php echo _("Tuuri");?></th>
                                 <th><?php echo _("Taktiikka");?></th>
                                 <th><?php echo _("Strategia");?></th>                                
+                                <th><?php echo _("Ostaistiko");?></th>
+                                <th><?php echo _("Pelaisitko");?></th>
                             </tr>
                         </tfoot>
                     </table>

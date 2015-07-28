@@ -26,7 +26,8 @@ $order = isset($_REQUEST["order"]) ? $_REQUEST["order"] : false;
 $columns = isset($_REQUEST["columns"]) ? $_REQUEST["columns"] : false;
 $protoid=isset($_SESSION["protoid"]) ? $_SESSION["protoid"] : false;
 
-$a = array("sessio", "numero", "score", "fiilis", "mekaniikka", "idea", "uutuus", "sosiaalisuus", "tuuri", "taktiikka", "strategia");
+$a = array("sessio", "numero", "score", "fiilis", "mekaniikka", "idea", "uutuus", "sosiaalisuus", "tuuri", "taktiikka", "strategia",
+           "ostaisitko", "pelaisitko");
 $p = new PROTOT($db);
 $od=false;
 if($order) {
@@ -46,8 +47,20 @@ $data = array();
 $i=0;
 foreach($protot["protot"] as $rivi) {
     $j=0;
-    foreach($a as $k=>$v) {
-        $data[$i][$j++]=$rivi[$v];
+    foreach($a as $k) {
+        switch($k) {
+            case "ostaisitko":
+            case "pelaisitko":
+                if($rivi[$k]==true || $rivi[$k]=="true")
+                    $va=_("Kyllä");
+                else
+                    $va=_("En");
+                break;
+            default:
+                $va=$rivi[$k];
+                break;
+        }
+        $data[$i][$j++]=$va;
     }
     $i++;
 }
